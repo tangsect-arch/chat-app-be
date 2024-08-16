@@ -8,7 +8,6 @@ const app = express();
 
 const userRoutes = require("./src/routes/user.routes");
 // const chatRoutes = require("./src/routes/chat.routes");
-const e = require("cors");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
