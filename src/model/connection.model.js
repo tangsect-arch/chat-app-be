@@ -12,14 +12,10 @@ const connectionSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    status: {
-      type: Boolean,
-      required: true,
-    },
   },
   { timestamps: true }
 );
-
+connectionSchema.index({ senderId: 1, receiverId: 1 }, { unique: true });
 const Connection = mongoose.model("Connection", connectionSchema);
 
 export default Connection;

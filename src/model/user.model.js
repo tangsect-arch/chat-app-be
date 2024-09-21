@@ -42,6 +42,28 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    phone: {
+      type: String,
+      required: false,
+      sparse: true,
+      unique: true,
+      validate: {
+        validator: (value) => /^\+?[1-9]\d{1,14}$/.test(value),
+        message: (props) => `${props.value} is not a valid phone number!`,
+      },
+    },
+    connections: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    blocked: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
