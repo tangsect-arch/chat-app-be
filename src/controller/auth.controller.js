@@ -111,14 +111,23 @@ export const logout = (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
-  const { email } = req.body;
+  const { username, oldPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
+    });
+    const isPasswordCorrect = await bcrypt.compare(
+      oldPassword,
+      user?.password || ""
+    );
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Incorrect password" });
     }
+
+    user.password = await hashPassword(newPassword);
+    await user.save();
 
     res.status(200).json({ message: "Email sent" });
   } catch (error) {
