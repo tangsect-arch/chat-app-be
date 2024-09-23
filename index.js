@@ -17,7 +17,7 @@ const port = process.env.PORT || 5000;
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use("/message", messageRouter);
+app.use("/conversation", messageRouter);
 app.use("/connection", connectionRouter);
 
 app.listen(port, () => {

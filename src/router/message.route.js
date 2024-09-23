@@ -2,21 +2,19 @@ import express from "express";
 
 const router = express.Router();
 
+import {
+  getConversation,
+  getConversationById,
+  postMessage,
+  updateMessage,
+  deleteMessage,
+} from "../controller/message.controller.js";
+
 router
-  .get("/", (req, res) => {
-    res.json({ success: "message fetched" });
-  })
-  .get("/:id", (req, res) => {
-    res.json({ success: "user message fetched" });
-  })
-  .post("/", (req, res) => {
-    res.json({ success: "message posted" });
-  })
-  .put("/", (req, res) => {
-    res.json({ success: "message put" });
-  })
-  .delete("/", (req, res) => {
-    res.json({ success: "message delete" });
-  });
+  .get("/", getConversation)
+  .get("/:id", getConversationById)
+  .post("/", postMessage)
+  .post("/:id", updateMessage)
+  .delete("/:id", deleteMessage);
 
 export default router;
