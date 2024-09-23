@@ -19,13 +19,10 @@ export const sendRequest = async (req, res) => {
 
 export const acceptRequest = async (req, res) => {
   try {
-    console.log("acceptRequest");
     const { id } = req.params;
-    console.log(`id: ${id}`);
     const connection = await Connection.findByIdAndUpdate(id);
     if (!connection) {
-      console.log("error");
-      return { error: "Not found" };
+      res.status(404).json({ error: "Not found" });
     }
     await User.findByIdAndUpdate(connection.senderId, {
       $addToSet: { connections: connection.receiverId },
@@ -34,7 +31,6 @@ export const acceptRequest = async (req, res) => {
       $addToSet: { connections: connection.senderId },
     });
     await Connection.findByIdAndDelete(id);
-    console.log("success");
     res.status(200).json({ message: "Request approved" });
   } catch (error) {
     console.log("Error in sendRequest controller", error.message);
@@ -47,7 +43,7 @@ export const deleteRequest = async (req, res) => {
     const { id } = req.params;
     const connectionDelete = await Connection.findByIdAndDelete(id);
     if (!connectionDelete) {
-      return { error: "Not found" };
+      res.status(404).json({ error: "Not found" });
     }
     res.status(200).json({ message: "Request rejected" });
   } catch (error) {
@@ -62,7 +58,7 @@ export const receive = async (req, res) => {
       receiverId: id,
     });
     if (!connectionList) {
-      res.status(200).json({ error: "Not found" });
+      res.status(404).json({ error: "Not found" });
     }
     res.status(200).json({ message: "Success", connectionList });
   } catch (error) {

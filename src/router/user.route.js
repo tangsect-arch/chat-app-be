@@ -1,19 +1,18 @@
 import express from "express";
 
+import {
+  getUserProfile,
+  updateUser,
+  deleteUser,
+  getConnections,
+} from "../controller/user.controller.js";
+
 const router = express.Router();
 
 router
-  .get("/", (req, res) => {
-    res.json({ success: "users fetched" });
-  })
-  .get("/:id", (req, res) => {
-    res.json({ success: "user id fetched" });
-  })
-  .put("/:id", (req, res) => {
-    res.json({ success: "user put" });
-  })
-  .delete("/:id", (req, res) => {
-    res.json({ success: "user delete" });
-  });
+  .get("/:id", getUserProfile)
+  .put("/:id", updateUser)
+  .delete("/:id", deleteUser)
+  .get("/connections/:id", getConnections);
 
 export default router;

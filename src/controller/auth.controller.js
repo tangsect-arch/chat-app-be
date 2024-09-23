@@ -1,7 +1,9 @@
-import bcrypt from "bcryptjs";
 import User from "../model/user.model.js";
-import generateTokenAndSetCookie from "../utils/generateToken.js";
-import validatePassword from "../utils/validatePassword.js";
+import {
+  validatePassword,
+  generateTokenAndSetCookie,
+  hashPassword,
+} from "../utils/auth.utils.js";
 
 export const signup = async (req, res) => {
   try {
@@ -25,9 +27,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "Username already exists" });
     }
 
-    // HASH PASSWORD HERE
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await hashPassword(password);
 
     // https://avatar-placeholder.iran.liara.run/
 
