@@ -3,18 +3,20 @@ import express from "express";
 const router = express.Router();
 
 import {
-  getConversation,
+  getConversations,
   getConversationById,
   postMessage,
   updateMessage,
   deleteMessage,
+  deleteConversation,
 } from "../controller/message.controller.js";
 
 router
-  .get("/", getConversation)
-  .get("/:id", getConversationById)
+  .get("/:id", getConversations)
+  .get("/:id/messages/", getConversationById)
   .post("/", postMessage)
-  .post("/:id", updateMessage)
-  .delete("/:id", deleteMessage);
+  .post("messages/:id", updateMessage)
+  .delete("/:id", deleteConversation)
+  .delete("messages/:id", deleteMessage);
 
 export default router;
