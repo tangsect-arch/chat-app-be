@@ -116,11 +116,8 @@ export const resetPassword = async (req, res) => {
   try {
     const user = await User.findOne({
       $or: [{ username }, { email: username }],
-    });
-    const isPasswordCorrect = await bcrypt.compare(
-      oldPassword,
-      user?.password || ""
-    );
+      password: await hashPassword(oldPassword),
+    }).select("password");
 
     if (!user) {
       return res.status(404).json({ error: "Incorrect password" });
@@ -129,7 +126,7 @@ export const resetPassword = async (req, res) => {
     user.password = await hashPassword(newPassword);
     await user.save();
 
-    res.status(200).json({ message: "Email sent" });
+    res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

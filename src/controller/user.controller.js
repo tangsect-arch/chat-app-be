@@ -72,3 +72,25 @@ export const getConnections = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const resetPassword = async (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
+      password: await hashPassword(oldPassword),
+    }).select("password");
+
+    if (!user) {
+      return res.status(404).json({ error: "Incorrect password" });
+    }
+
+    user.password = await hashPassword(newPassword);
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
