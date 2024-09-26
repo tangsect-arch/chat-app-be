@@ -1,6 +1,7 @@
 import path from "path";
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import authRouter from "./src/router/auth.route.js";
 import userRouter from "./src/router/user.route.js";
@@ -12,6 +13,14 @@ import connectToMongoDB from "./src/config/db.config.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+app.use(cors());
+
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
 
 const port = process.env.PORT || 5000;
 
