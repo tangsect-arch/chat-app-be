@@ -56,20 +56,12 @@ export const postMessage = async (req, res) => {
   }
 
   try {
-    // const conversation = conversationId
-    //   ? await Conversation.findById(conversationId)
-    //   : await Conversation.findOneAndUpdate(
-    //       { participants: { $all: [senderId, receiverId] } },
-    //       { participants: [senderId, receiverId] },
-    //       { new: true, upsert: true }
-    //     );
-    let conversation
-    if(conversationId){
-      conversation = await Conversation.findById(conversationId)
-    }
-    else{
+    let conversation;
+    if (conversationId) {
+      conversation = await Conversation.findById(conversationId);
+    } else {
       conversation = await Conversation.findOne({
-        participants: { $all: [senderId, receiverId] }
+        participants: { $all: [senderId, receiverId] },
       });
 
       if (!conversation) {
@@ -78,7 +70,6 @@ export const postMessage = async (req, res) => {
         });
       }
     }
-    console.log(`conversation: ${conversation}`);
     const newMessage = new Message({
       conversationId: conversation._id,
       senderId,
