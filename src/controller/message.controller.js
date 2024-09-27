@@ -56,14 +56,29 @@ export const postMessage = async (req, res) => {
   }
 
   try {
-    const conversation = conversationId
-      ? await Conversation.findById(conversationId)
-      : await Conversation.findOneAndUpdate(
-          { participants: { $all: [senderId, receiverId] } },
-          { participants: [senderId, receiverId] },
-          { new: true, upsert: true }
-        );
+    // const conversation = conversationId
+    //   ? await Conversation.findById(conversationId)
+    //   : await Conversation.findOneAndUpdate(
+    //       { participants: { $all: [senderId, receiverId] } },
+    //       { participants: [senderId, receiverId] },
+    //       { new: true, upsert: true }
+    //     );
+    let conversation
+    if(conversationId){
+      conversation = await Conversation.findById(conversationId)
+    }
+    else{
+      conversation = await Conversation.findOne({
+        participants: { $all: [senderId, receiverId] }
+      });
 
+      if (!conversation) {
+        conversation = await Conversation.create({
+          participants: [senderId, receiverId],
+        });
+      }
+    }
+    console.log(`conversation: ${conversation}`);
     const newMessage = new Message({
       conversationId: conversation._id,
       senderId,
@@ -74,7 +89,7 @@ export const postMessage = async (req, res) => {
 
     res.status(200).send({ success: "true", message: "sent" });
   } catch (error) {
-    console.error(error);
+    console.log(`error: ${error}`);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
